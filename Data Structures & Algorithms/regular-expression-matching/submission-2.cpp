@@ -1,0 +1,26 @@
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        int m = s.size(), n = p.size();
+        
+        vector<bool> dp(n+1, false);
+        dp[0] = true;
+        for (int j = 1; j < n + 1; j++) dp[j] = (p[j-1] == '*' && dp[j-2]);
+
+        for (int i = 1; i <= m; i++) {
+            vector<bool> temp(n+1, false);
+            for (int j = 1; j <= n; j++) {
+                if (s[i-1] == p[j-1] || p[j-1] == '.') {                    
+                    temp[j] = dp[j-1];
+                    
+                } else if (p[j-1] == '*'){
+                    temp[j] = (temp[j-2] || 
+                        ((p[j-2] == s[i-1] || p[j-2] == '.') && dp[j]));
+                }
+            }
+            dp = temp;
+        }
+
+        return dp[n];
+    }
+};
